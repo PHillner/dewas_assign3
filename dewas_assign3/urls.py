@@ -15,7 +15,17 @@ Including another URLconf
 """
 from django.conf.urls import url
 # from django.contrib import admin
+from blog.views import home
+from blog.views import blog
+from blog.views import edit
+from blog.views import add
+from blog.views import delete
 
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
+    url(r'^/blog/', home),
+    url(r'^/blog/(?P<id>\d+)/$', blog),
+    url(r'^/edit/(?P<id>\d+)/$', edit),
+    url(r'^/add/', add),
+    url(r'^/delete/(?P<id>\d+)/$', delete),
 ]
