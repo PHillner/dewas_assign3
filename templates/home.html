@@ -5,6 +5,22 @@
     <title>Blog 42</title>
 </head>
 <body>
-    You have entered the Blog 42! Hooray! A list of blogs should be visible here.
+    <h1>Blog 42</h1>
+    <div>
+        {% if added %}
+            <p><font color="red">Blog added</font></p>
+        {% elif removed %}
+            <p><font color="red">Blog removed</font></p>
+        {% endif %}
+    </div>
+    <div id="blogs">
+        {% for blog in blogs %}
+            <p>
+                <h3>{{ blog.name }}</h3>
+                <h6>{{ blog.time }}</h6>
+                <h4>{{ blog.text }}</h4>
+            </p>
+        {% endfor %}
+    </div>
 </body>
 </html>

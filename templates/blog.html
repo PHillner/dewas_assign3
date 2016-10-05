@@ -5,6 +5,14 @@
     <title>Blog 42</title>
 </head>
 <body>
-    Here should be the text of a blog post.
+    <div>
+        <h1>{{ name }}</h1>
+        <h6>{{ date }}</h6>
+        <p>{{ text }}</p>
+        <form method="get" action="edit.html">
+            <input type="hidden" value="{{ id }}">
+            <input type="submit" value="Edit">
+        </form>
+    </div>
 </body>
 </html>
