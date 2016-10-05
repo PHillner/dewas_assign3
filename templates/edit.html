@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ SITE_NAME }}</title>
+</head>
+<body>
+    <form method="post" action="/edit/{{ blog.id }}">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="{{ blog.id }}">
+        Name:<br>
+        <input type="text" name="name" maxlength="50" value="{{ blog.name }}"><br>
+        Text:<br>
+        <textarea name="text" cols="54" rows="12">{{ blog.text }}</textarea><br>
+        <input type="submit" value="Save">
+    </form>
+</body>
+</html>
