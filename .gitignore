@@ -1,1 +1,4 @@
 .idea/*
+blog/*
+db.sqlite3
+*.pyc
