@@ -5,11 +5,13 @@
     <title>Blog 42</title>
 </head>
 <body>
-    <form method="post" action="home.html">
+    <form method="post" action="/edit">
+        {% csrf_token %}
         Name:<br>
         <input type="text" name="name" maxlength="50" value="{{ name }}"><br>
         Text:<br>
         <textarea name="text" cols="54" rows="12">{{ text }}</textarea>
+        <input type="submit" value="Save">
     </form>
 </body>
 </html>

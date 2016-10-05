@@ -14,10 +14,12 @@
         {% endif %}
     </div>
     <div id="blogs">
+
         {% for blog in blogs %}
             <p>
-                <h3>{{ blog.name }}</h3>
-                <h6>{{ blog.time }}</h6>
+                <h2>{{ blog.name }}</h2>
+                ID: {{ blog.id }}<br>
+                Time: {{ blog.time }}
                 <h4>{{ blog.text }}</h4>
             </p>
         {% endfor %}

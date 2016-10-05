@@ -6,10 +6,10 @@
 </head>
 <body>
     <div>
-        <h1>{{ name }}</h1>
-        <h6>{{ date }}</h6>
-        <p>{{ text }}</p>
-        <form method="get" action="edit.html">
+        <h1>{{ blog.name }}</h1>
+        Time: {{ blog.time }}
+        <h4>{{ blog.text }}</h4>
+        <form method="get" action="/edit">
             <input type="hidden" value="{{ id }}">
             <input type="submit" value="Edit">
         </form>
