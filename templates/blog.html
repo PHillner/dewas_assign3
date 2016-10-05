@@ -2,17 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Blog 42</title>
+    <title>{{ SITE_NAME }}</title>
 </head>
 <body>
-    <div>
+    {% if blog == 0 %}
+        Sorry, the blog post does not exist!
+    {% else %}
         <h1>{{ blog.name }}</h1>
         Time: {{ blog.time }}
         <h4>{{ blog.text }}</h4>
-        <form method="get" action="/edit">
-            <input type="hidden" value="{{ id }}">
+        <form method="get" action="/edit/{{ blog.id }}">
             <input type="submit" value="Edit">
         </form>
-    </div>
+        <form method="get" action="/delete/{{ blog.id }}">
+            <input type="submit" value="Delete">
+        </form>
+    {% endif %}
 </body>
 </html>

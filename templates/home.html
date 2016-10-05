@@ -2,25 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Blog 42</title>
+    <title>{{ SITE_NAME }}</title>
 </head>
 <body>
     <h1>Blog 42</h1>
-    <div>
-        {% if added %}
-            <p><font color="red">Blog added</font></p>
-        {% elif removed %}
-            <p><font color="red">Blog removed</font></p>
-        {% endif %}
-    </div>
+    <form method="get" action="/add">
+        <input type="submit" value="New blog post">
+    </form>
     <div id="blogs">
-
         {% for blog in blogs %}
             <p>
-                <h2>{{ blog.name }}</h2>
+                <h2><a href="/blog/{{ blog.id }}">{{ blog.name }}</a></h2>
                 ID: {{ blog.id }}<br>
-                Time: {{ blog.time }}
-                <h4>{{ blog.text }}</h4>
+                Time: {{ blog.time }}<br>
+                <textarea readonly cols="54" rows="6">{{ blog.text }}</textarea>
             </p>
         {% endfor %}
     </div>
