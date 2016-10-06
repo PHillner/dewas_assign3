@@ -9,6 +9,13 @@
     <form method="get" action="/add">
         <input type="submit" value="New blog post">
     </form>
+    <div id="info">
+        {% if messages.info %}
+        {% for msg in messages %}
+        <li>{{ msg }}</li>
+        {% endfor %}
+    {% endif %}
+    </div>
     <div id="blogs">
         {% for blog in blogs %}
             <p>
