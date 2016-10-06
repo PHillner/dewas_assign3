@@ -5,6 +5,7 @@ from django.template.loader import get_template
 from models import Blog
 from datetime import datetime
 from django.views.decorators.csrf import csrf_protect
+from django.contrib import messages
 
 # Create your views here.
 SITE_NAME = "Blog 42"
@@ -46,6 +47,7 @@ def add(request):
         blog.text = request.POST["text"]
         blog.time = datetime.today()
         blog.save()
+        messages.add_message(request,messages.INFO,"Blog post added")
         return HttpResponseRedirect('/blog/')
     else:
         return render(request, 'add.html')
@@ -55,6 +57,7 @@ def delete(request, id):
     if request.method=="POST" and request.POST["choice1"]=="Yes":
         blog = Blog.objects.get(id=id)
         blog.delete()
+        messages.add_message(request, messages.INFO, "Blog post removed")
         return HttpResponseRedirect('/blog/')
     else:
         t = get_template('delete.html')
