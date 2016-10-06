@@ -54,7 +54,7 @@ def add(request):
 
 @csrf_protect
 def delete(request, id):
-    if request.method=="POST" and request.POST["choice1"]=="Yes":
+    if request.method=="POST" and request.POST.get("choice1"):
         blog = Blog.objects.get(id=id)
         blog.delete()
         messages.add_message(request, messages.INFO, "Blog post removed")
