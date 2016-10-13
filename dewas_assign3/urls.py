@@ -25,4 +25,7 @@ urlpatterns = [
     url(r'^edit/(?P<id>\d+)/?$', edit),
     url(r'^add/?$', add),
     url(r'^delete/(?P<id>\d+)/?$', delete),
+    url(r'^login/?$', login),
+    url(r'^logout/?$', logout),
+    url(r'^register/?$', register)
 ]
