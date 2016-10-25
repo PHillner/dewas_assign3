@@ -1,10 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ SITE_NAME }}</title>
-</head>
-<body>
-
-</body>
-</html>
+<div id="register">
+    <div id="info">
+        {% if messages %}
+            {% for msg in messages %}
+                <li>{{ msg }}</li>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <form method="post" action="/register/">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td>First name:</td>
+                <td><input id="first_name"></td>
+            </tr>
+            <tr>
+                <td>Last name:</td>
+                <td><input id="last_name"></td>
+            </tr>
+            <tr>
+                <td>Email:</td>
+                <td><input id="email"></td>
+            </tr>
+            <tr>
+                <td>Username:</td>
+                <td><input id="username"></td>
+            </tr>
+            <tr>
+                <td>Password:</td>
+                <td><input id="password"></td>
+            </tr>
+            <tr>
+                <td>Re-type password:</td>
+                <td><input id="password_check"></td>
+            </tr>
+        </table>
+        <input type="submit" value="Register">
+    </form>
+    <a href="/login/">Or login here!</a>
+</div>

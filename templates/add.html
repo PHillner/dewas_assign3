@@ -1,16 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ SITE_NAME }}</title>
-</head>
-<body>
-    <form method="post" action="/add">
+<div id="add_blog">
+    <form method="post" action="/add/">
         {% csrf_token %}
         <p>Name: <input type="text" name="name" maxlength="50"></p>
         <p>Text:<br>
         <textarea name="text" cols="54" rows="12" placeholder="Insert the text for your blog here"></textarea> </p>
         <input type="submit" value="Create">
     </form>
-</body>
-</html>
+</div>

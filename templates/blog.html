@@ -1,22 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ SITE_NAME }}</title>
-</head>
-<body>
-    {% if blog == 0 %}
-        Sorry, the blog post does not exist!
-    {% else %}
-        <h1>{{ blog.name }}</h1>
-        Time: {{ blog.time }}
-        <h4>{{ blog.text }}</h4>
-        <form method="get" action="/edit/{{ blog.id }}">
-            <input type="submit" value="Edit">
-        </form>
-        <form method="get" action="/delete/{{ blog.id }}">
-            <input type="submit" value="Delete">
-        </form>
-    {% endif %}
-</body>
-</html>
+<div id="blog_page">
+    <h1>{{ blog.name }}</h1>
+    Time: {{ blog.time }}
+    <h4>{{ blog.text }}</h4>
+    <form method="get" action="/edit/{{ blog.id }}">
+        <input type="submit" value="Edit">
+    </form>
+    <form method="get" action="/delete/{{ blog.id }}">
+        <input type="submit" value="Delete">
+    </form>
+</div>

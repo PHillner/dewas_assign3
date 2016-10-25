@@ -1,49 +1,71 @@
 from django.contrib.auth.models import User
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Template, Context, RequestContext
 from django.template.loader import get_template
 from models import Blog
 from datetime import datetime
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
-SITE_NAME = "Blog 42"
 
 def home(request):
-    t = get_template('home.html')
-    html = t.render(Context({'SITE_NAME':SITE_NAME,'blogs':Blog.objects.order_by("time").reverse()}), request)
+    tHeader = get_template('header.html')
+    header = tHeader.render()
+    tBody = get_template('home.html')
+    body = tBody.render(Context({'blogs':Blog.objects.order_by("time").reverse()}), request)
+    t = get_template('template.html')
+    html = t.render(Context({'page_body':body, 'header_body':header}), request)
     return HttpResponse(html)
 
 def blog(request, id):
     if Blog.exists(id):
         blog = Blog.objects.get(id=id)
-        t = get_template('blog.html')
-        html = t.render(Context({'SITE_NAME':SITE_NAME,'blog':blog}), request)
+        tHeader = get_template('header.html')
+        header = tHeader.render()
+        tBody = get_template('blog.html')
+        body = tBody.render(Context({'blog':blog}), request)
+        t = get_template('template.html')
+        html = t.render(Context({'page_body':body, 'header_body':header}), request)
         return HttpResponse(html)
     else:
-        t = get_template('blog.html')
-        html = t.render(Context({'SITE_NAME':SITE_NAME,'blog':0}), request)
-        return HttpResponse(html)
+        messages.add_message(request, messages.ERROR, "Sorry, the blog post you requested does not exist!")
+        if request.POST.get("next"):
+            return redirect(request.POST.get("next"))
+        else:
+            return HttpResponseRedirect('/blog/')
 
+@login_required(login_url="/login/")
 @csrf_protect
 def edit(request, id):
-    if request.method=="POST" and request.COOKIES.has_key("logd_in"):
+    if request.method=="POST" and request.user.is_authenticated:
         blog = Blog.objects.get(id=id)
         blog.name = request.POST["name"]
         blog.text = request.POST["text"]
         blog.save()
-        return HttpResponseRedirect('/blog/')
+        if request.POST.get("next"):
+            return redirect(request.POST.get("next"))
+        else:
+            return HttpResponseRedirect('/blog/')
     elif request.COOKIES.has_key("logd_in"):
-        t = get_template('edit.html')
-        html = t.render(Context({'SITE_NAME': SITE_NAME, 'blog': Blog.objects.get(id=id)}), request)
+        tHeader = get_template('header.html')
+        header = tHeader.render()
+        tBody = get_template('edit.html')
+        body = tBody.render(Context({'blog':Blog.objects.get(id=id)}), request)
+        t = get_template('template.html')
+        html = t.render(Context({'page_body':body, 'header_body':header}), request)
         return HttpResponse(html)
     else:
-        messages.add_message(request, messages.INFO, "Unauthorized, please log in.")
-        return HttpResponseRedirect('/blog/')
+        messages.add_message(request, messages.ERROR, "Unauthorized, please log in.")
+        if request.POST.get("next"):
+            return redirect(request.POST.get("next"))
+        else:
+            return HttpResponseRedirect('/login/')
 
+@login_required(login_url="/login/")
 @csrf_protect
 def add(request):
     if request.method=="POST" and request.user.is_authenticated:
@@ -52,55 +74,115 @@ def add(request):
         blog.text = request.POST["text"]
         blog.time = datetime.today()
         blog.save()
-        messages.add_message(request,messages.INFO,"Blog post added")
+        messages.add_message(request,messages.SUCCESS,"Blog post added")
         return HttpResponseRedirect('/blog/')
     elif request.user.is_authenticated:
-        return render(request, 'add.html')
+        tHeader = get_template('header.html')
+        header = tHeader.render()
+        tBody = get_template('add.html')
+        body = tBody.render(request)
+        t = get_template('template.html')
+        html = t.render(Context({'page_body': body, 'header_body':header}), request)
+        return HttpResponse(html)
     else:
-        messages.add_message(request, messages.INFO, "Unauthorized, please log in.")
-        return HttpResponseRedirect('/blog/')
+        messages.add_message(request, messages.ERROR, "Unauthorized, please log in.")
+        if request.POST.get("next"):
+            return redirect(request.POST.get("next"))
+        else:
+            return HttpResponseRedirect('/login/')
 
+@login_required(login_url="/login/")
 @csrf_protect
 def delete(request, id):
     if request.method=="POST" and request.POST.get("choice1") and request.user.is_authenticated:
         blog = Blog.objects.get(id=id)
         blog.delete()
-        messages.add_message(request, messages.INFO, "Blog post removed")
+        messages.add_message(request, messages.SUCCESS, "Blog post removed")
         return HttpResponseRedirect('/blog/')
     elif request.user.is_authenticated:
-        t = get_template('delete.html')
-        html = t.render(Context({'SITE_NAME': SITE_NAME, 'blog': Blog.objects.get(id=id)}), request)
+        tHeader = get_template('header.html')
+        header = tHeader.render()
+        tBody = get_template('delete.html')
+        body = tBody.render(Context({'blog': Blog.objects.get(id=id)}), request)
+        t = get_template('template.html')
+        html = t.render(Context({'page_body': body, 'header_body':header}), request)
         return HttpResponse(html)
     else:
-        messages.add_message(request, messages.INFO, "Unauthorized, please log in.")
-        return HttpResponseRedirect('/blog/')
+        messages.add_message(request, messages.ERROR, "Unauthorized, please log in.")
+        if request.POST.get("next"):
+            return redirect(request.POST.get("next"))
+        else:
+            return HttpResponseRedirect('/login/')
 
 @csrf_protect
 def login(request):
     if request.method == "POST":
-        username = request.username
-        password = request.password
-        user = authenticate(username, password)
+        username = request.POST["username"]
+        password = request.POST["password"]
+        user = authenticate(username=username, password=password)
         if user is not None:
             login(request, username)
-            messages.add_message(request, messages.INFO, "Logged in.")
-            return HttpResponseRedirect('/blog/')
+            messages.add_message(request, messages.SUCCESS, "Logged in.")
+            if request.POST.get("next"):
+                return redirect(request.POST.get("next"))
+            else:
+                return HttpResponseRedirect('/blog/')
         else:
             messages.add_message(request, messages.ERROR, "Login credential error.")
-            t = get_template('login.html')
-            html = t.render(Context({'SITE_NAME': SITE_NAME}), request)
+            tHeader = get_template('header.html')
+            header = tHeader.render()
+            tBody = get_template('login.html')
+            body = tBody.render(request)
+            t = get_template('template.html')
+            html = t.render(Context({'page_body': body, 'header_body':header}), request)
             return HttpResponse(html)
     elif request.method=="GET":
-        t = get_template('login.html')
-        html = t.render(Context({'SITE_NAME': SITE_NAME}), request)
+        tHeader = get_template('header.html')
+        header = tHeader.render()
+        tBody = get_template('login.html')
+        body = tBody.render(request)
+        t = get_template('template.html')
+        html = t.render(Context({'page_body': body, 'header_body':header}), request)
         return HttpResponse(html)
+    else:
+        messages.add_message(request, messages.WARNING, "You can't do that.")
+        if request.POST.get("next"):
+            return redirect(request.POST.get("next"))
+        else:
+            return HttpResponseRedirect('/blog/')
 
 @csrf_protect
 def logout(request):
-    t = get_template('logout.html')
-    html = t.render(Context({'SITE_NAME': SITE_NAME}), request)
-    r = HttpResponse(html)
-    return r
+    if request.method=="POST" and request.POST.get("choice1") and request.user.is_authenticated:
+        messages.add_message(request, messages.SUCCESS, "Logged out.")
+        logout(request)
+        if request.POST.get("next"):
+            return redirect(request.POST.get("next"))
+        else:
+            tHeader = get_template('header.html')
+            header = tHeader.render()
+            tBody = get_template('home.html')
+            body = tBody.render(request)
+            t = get_template('template.html')
+            html = t.render(Context({'page_body': body, 'header_body':header}), request)
+            return HttpResponse(html)
+    elif request.method=="GET" and request.user.is_authenticated:
+        tHeader = get_template('header.html')
+        header = tHeader.render()
+        tBody = get_template('logout.html')
+        body = tBody.render(request)
+        t = get_template('template.html')
+        html = t.render(Context({'page_body': body, 'header_body':header}), request)
+        return HttpResponse(html)
+    else:
+        messages.add_message(request, messages.ERROR, "Unable to log out. You first need to be logged in to do that.")
+        tHeader = get_template('header.html')
+        header = tHeader.render()
+        tBody = get_template('home.html')
+        body = tBody.render(request)
+        t = get_template('template.html')
+        html = t.render(Context({'page_body': body, 'header_body': header}), request)
+        return HttpResponse(html)
 
 @csrf_protect
 def register(request):
@@ -109,14 +191,27 @@ def register(request):
         if user is not None:
             messages.add_message(request, messages.ERROR, "Unable to register to given credentials.\n"
                                                           "Try other username.")
-            t = get_template('register.html')
-            html = t.render(Context({'SITE_NAME': SITE_NAME}), request)
+            tHeader = get_template('header.html')
+            header = tHeader.render()
+            tBody = get_template('register.html')
+            body = tBody.render(request)
+            t = get_template('template.html')
+            html = t.render(Context({'page_body': body, 'header_body':header}), request)
             return HttpResponse(html)
-        user = User.objects.create_user(request.username,password=request.password)
+        else:
+            user = User.objects.create_user(request.username,password=request.password)
 
-    if request.method == "GET" and not request.user.is_authenticated:
-        t = get_template('register.html')
-        html = t.render(Context({'SITE_NAME': SITE_NAME}), request)
+    elif request.method == "GET" and not request.user.is_authenticated:
+        tHeader = get_template('header.html')
+        header = tHeader.render()
+        tBody = get_template('register.html')
+        body = tBody.render(request)
+        t = get_template('template.html')
+        html = t.render(Context({'page_body': body, 'header_body':header}), request)
         return HttpResponse(html)
     else:
-        user = authenticate(request.username)
+        messages.add_message(request, messages.WARNING, "You can't do that.")
+        if request.POST.get("next"):
+            return redirect(request.POST.get("next"))
+        else:
+            return HttpResponseRedirect('/blog/')
