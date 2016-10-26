@@ -5,10 +5,11 @@ from django.template import Template, Context, RequestContext
 from django.template.loader import get_template
 from models import Blog
 from datetime import datetime
-from django.views.decorators.csrf import csrf_protect, csrf_exempt
+from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
 
 # Create your views here.
 
@@ -16,6 +17,23 @@ def make_header(request):
     tHeader = get_template('header.html')
     header = tHeader.render(Context({'user': request.user}))
     return header
+
+def make_footer(request):
+    tFooter = get_template('footer.html')
+    footer = tFooter.render(Context({'request':request}))
+    return footer
+
+def update_cache_stats(request):
+    if cache.get('session_start') is None:
+        cache.set_many({'session_start':datetime.now(), 'visited':0,
+                        'edited':0, 'created':0, 'deleted':0})
+    elif request.path=='^blog/(?P<id>\d+)/?$' and request.method=='GET':
+        n = cache.get('visited') +1
+        cache.set('visited', n)
+    elif request.path=='^edit/(?P<id>\d+)/?$' and request.method=='POST':
+        n = cache.get('edited') + 1
+        cache.set('edited', n)
+
 
 def home(request):
     tBody = get_template('home.html')
