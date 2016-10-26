@@ -1,4 +1,5 @@
 <div id="edit_blog">
+    <h2>Edit blogpost</h2>
     <form method="post" action="/edit/{{ blog.id }}">
         {% csrf_token %}
         <input type="hidden" name="id" value="{{ blog.id }}">

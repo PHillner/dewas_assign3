@@ -12,24 +12,25 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
-def home(request):
+def make_header(request):
     tHeader = get_template('header.html')
-    header = tHeader.render()
+    header = tHeader.render(Context({'user': request.user}))
+    return header
+
+def home(request):
     tBody = get_template('home.html')
     body = tBody.render(Context({'blogs':Blog.objects.order_by("time").reverse()}), request)
     t = get_template('template.html')
-    html = t.render(Context({'page_body':body, 'header_body':header}), request)
+    html = t.render(Context({'page_body':body, 'header_body':make_header(request)}), request)
     return HttpResponse(html)
 
 def blog(request, id):
     if Blog.exists(id):
         blog = Blog.objects.get(id=id)
-        tHeader = get_template('header.html')
-        header = tHeader.render()
         tBody = get_template('blog.html')
         body = tBody.render(Context({'blog':blog}), request)
         t = get_template('template.html')
-        html = t.render(Context({'page_body':body, 'header_body':header}), request)
+        html = t.render(Context({'page_body':body, 'header_body':make_header(request)}), request)
         return HttpResponse(html)
     else:
         messages.add_message(request, messages.ERROR, "Sorry, the blog post you requested does not exist!")
@@ -51,12 +52,10 @@ def edit(request, id):
         else:
             return HttpResponseRedirect('/blog/')
     elif request.COOKIES.has_key("logd_in"):
-        tHeader = get_template('header.html')
-        header = tHeader.render()
         tBody = get_template('edit.html')
         body = tBody.render(Context({'blog':Blog.objects.get(id=id)}), request)
         t = get_template('template.html')
-        html = t.render(Context({'page_body':body, 'header_body':header}), request)
+        html = t.render(Context({'page_body':body, 'header_body':make_header(request)}), request)
         return HttpResponse(html)
     else:
         messages.add_message(request, messages.ERROR, "Unauthorized, please log in.")
@@ -77,12 +76,10 @@ def add(request):
         messages.add_message(request,messages.SUCCESS,"Blog post added")
         return HttpResponseRedirect('/blog/')
     elif request.user.is_authenticated:
-        tHeader = get_template('header.html')
-        header = tHeader.render()
         tBody = get_template('add.html')
         body = tBody.render(request)
         t = get_template('template.html')
-        html = t.render(Context({'page_body': body, 'header_body':header}), request)
+        html = t.render(Context({'page_body': body, 'header_body':make_header(request)}), request)
         return HttpResponse(html)
     else:
         messages.add_message(request, messages.ERROR, "Unauthorized, please log in.")
@@ -100,12 +97,10 @@ def delete(request, id):
         messages.add_message(request, messages.SUCCESS, "Blog post removed")
         return HttpResponseRedirect('/blog/')
     elif request.user.is_authenticated:
-        tHeader = get_template('header.html')
-        header = tHeader.render()
         tBody = get_template('delete.html')
         body = tBody.render(Context({'blog': Blog.objects.get(id=id)}), request)
         t = get_template('template.html')
-        html = t.render(Context({'page_body': body, 'header_body':header}), request)
+        html = t.render(Context({'page_body': body, 'header_body':make_header(request)}), request)
         return HttpResponse(html)
     else:
         messages.add_message(request, messages.ERROR, "Unauthorized, please log in.")
@@ -129,20 +124,16 @@ def login(request):
                 return HttpResponseRedirect('/blog/')
         else:
             messages.add_message(request, messages.ERROR, "Login credential error.")
-            tHeader = get_template('header.html')
-            header = tHeader.render()
-            tBody = get_template('login.html')
+            tBody = get_template('login_derp.html')
             body = tBody.render(request)
             t = get_template('template.html')
-            html = t.render(Context({'page_body': body, 'header_body':header}), request)
+            html = t.render(Context({'page_body': body, 'header_body':make_header(request)}), request)
             return HttpResponse(html)
     elif request.method=="GET":
-        tHeader = get_template('header.html')
-        header = tHeader.render()
-        tBody = get_template('login.html')
+        tBody = get_template('login_derp.html')
         body = tBody.render(request)
         t = get_template('template.html')
-        html = t.render(Context({'page_body': body, 'header_body':header}), request)
+        html = t.render(Context({'page_body': body, 'header_body':make_header(request)}), request)
         return HttpResponse(html)
     else:
         messages.add_message(request, messages.WARNING, "You can't do that.")
@@ -159,29 +150,23 @@ def logout(request):
         if request.POST.get("next"):
             return redirect(request.POST.get("next"))
         else:
-            tHeader = get_template('header.html')
-            header = tHeader.render()
             tBody = get_template('home.html')
             body = tBody.render(request)
             t = get_template('template.html')
-            html = t.render(Context({'page_body': body, 'header_body':header}), request)
+            html = t.render(Context({'page_body': body, 'header_body':make_header(request)}), request)
             return HttpResponse(html)
     elif request.method=="GET" and request.user.is_authenticated:
-        tHeader = get_template('header.html')
-        header = tHeader.render()
-        tBody = get_template('logout.html')
+        tBody = get_template('logout_derp.html')
         body = tBody.render(request)
         t = get_template('template.html')
-        html = t.render(Context({'page_body': body, 'header_body':header}), request)
+        html = t.render(Context({'page_body': body, 'header_body':make_header(request)}), request)
         return HttpResponse(html)
     else:
         messages.add_message(request, messages.ERROR, "Unable to log out. You first need to be logged in to do that.")
-        tHeader = get_template('header.html')
-        header = tHeader.render()
         tBody = get_template('home.html')
         body = tBody.render(request)
         t = get_template('template.html')
-        html = t.render(Context({'page_body': body, 'header_body': header}), request)
+        html = t.render(Context({'page_body': body, 'header_body': make_header(request)}), request)
         return HttpResponse(html)
 
 @csrf_protect
@@ -191,23 +176,19 @@ def register(request):
         if user is not None:
             messages.add_message(request, messages.ERROR, "Unable to register to given credentials.\n"
                                                           "Try other username.")
-            tHeader = get_template('header.html')
-            header = tHeader.render()
             tBody = get_template('register.html')
             body = tBody.render(request)
             t = get_template('template.html')
-            html = t.render(Context({'page_body': body, 'header_body':header}), request)
+            html = t.render(Context({'page_body': body, 'header_body':make_header(request)}), request)
             return HttpResponse(html)
         else:
             user = User.objects.create_user(request.username,password=request.password)
 
     elif request.method == "GET" and not request.user.is_authenticated:
-        tHeader = get_template('header.html')
-        header = tHeader.render()
         tBody = get_template('register.html')
         body = tBody.render(request)
         t = get_template('template.html')
-        html = t.render(Context({'page_body': body, 'header_body':header}), request)
+        html = t.render(Context({'page_body': body, 'header_body':make_header(request)}), request)
         return HttpResponse(html)
     else:
         messages.add_message(request, messages.WARNING, "You can't do that.")
