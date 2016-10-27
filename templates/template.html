@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
 </head>
 <body>
-    <header id="top" class="top">
+    <header id="top">
         <h1><a href="/">Blog 42</a></h1>
         <div id="login_out_reg">
             {% if request.user.is_authenticated %}
@@ -24,10 +24,13 @@
             {% endfor %}
         {% endif %}
     </div>
-    {% block content %}
-    {% endblock %}
-    <a href="/blog/">Archive</a>
-    <footer id="bottom" class="bottom">
+    <div id="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+    <footer id="bottom">
+        <br>
+        <a href="/blog/">Archive</a>
         <div id="stats">
             <table>
                 <tr>

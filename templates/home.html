@@ -6,14 +6,17 @@
     </form>
     <div id="blogs">
         {% for blog in blogs %}
-            <p id="blog">
+            <br>
+            <div id="blog">
                 <h2><a href="/blog/{{ blog.id }}">{{ blog.name }}</a></h2>
                 <small>
                     ID: {{ blog.id }}<br>
                     Time: {{ blog.time }}<br>
                 </small>
-                <textarea readonly cols="54" rows="6">{{ blog.text }}</textarea>
-            </p>
+                <div id="blog_text">
+                    {{ blog.text }}
+                </div>
+            </div>
         {% endfor %}
     </div>
 </div>

@@ -1,0 +1,59 @@
+#top {
+}
+
+body {
+}
+
+h1 {
+}
+
+h2 {
+}
+
+h3 {
+}
+
+h4 {
+}
+
+p {
+}
+
+#blogs {
+}
+
+#blog {
+    border: solid;
+    border-width: thin;
+    border-color: dimgrey;
+    min-width: 500px;
+    width: 70%;
+}
+
+header #login_out_reg {
+    text-align: right;
+}
+
+#login {
+}
+
+#register {
+}
+
+#info {
+}
+
+#content {
+    align-content: center;
+}
+
+#bottom {
+}
+
+#stats {
+    border: solid;
+    border-width: thin;
+    border-color: dimgrey;
+    min-width: 415px;
+    width: 22.5%;
+}
