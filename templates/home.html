@@ -1,3 +1,5 @@
+{% extends 'template.html' %}
+{% block content %}
 <div id="home">
     <form method="get" action="/add">
         <input type="submit" value="New blog post">
@@ -22,3 +24,4 @@
         {% endfor %}
     </div>
 </div>
+{% endblock %}

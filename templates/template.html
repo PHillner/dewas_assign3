@@ -7,8 +7,52 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
 </head>
 <body>
-    {{ header_body }}
-    {{ page_body }}
-    {{ footer_body }}
+    <header id="top" class="top">
+        <h1><a href="/blog/">Blog 42</a></h1>
+        <div id="login_out_reg">
+            {% if request.user.is_authenticated %}
+                <a href="/logout/">Logout.</a>
+            {% else %}
+                <a href="/login/">Login</a> or <a href="/createuser/">Register.</a>
+            {% endif %}
+        </div>
+    </header>
+    {% block content %}
+    {% endblock %}
+    <footer id="bottom" class="bottom">
+        <div id="stats">
+            <table>
+                <tr>
+                    <td><b>Session start date:</b></td>
+                    <td>{{ request.session.session_start }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><b>Blogs visited:</b></td>
+                    <td>{{ request.session.visited }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><b>Blogs edited:</b></td>
+                    <td>{{ request.session.edited }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><b>Blogs created:</b></td>
+                    <td>{{ request.session.created }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><b>Blogs deleted:</b></td>
+                    <td>{{ request.session.deleted }}</td>
+                    <td><form method="post" action="/session_stats_reset/">
+                        {% csrf_token %}
+                        <input type="submit" value="Reset stats">
+                        <input type="hidden" name="next" value="{{ request.path }}">
+                    </form></td>
+                </tr>
+            </table>
+        </div>
+    </footer>
 </body>
 </html>

@@ -1,3 +1,5 @@
+{% extends 'template.html' %}
+{% block content %}
 <div id="blog_page">
     <h1>{{ blog.name }}</h1>
     Time: {{ blog.time }}
@@ -9,3 +11,4 @@
         <input type="submit" value="Delete">
     </form>
 </div>
+{% endblock %}

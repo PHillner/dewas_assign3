@@ -1,11 +1,12 @@
+{% extends 'template.html' %}
+{% block content %}
 <html lang="en">
-    <header>
-        <h1><a href="/blog/">Blog 42</a> </h1>
-    </header>
     <h2>Login</h2>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Login</button>
     </form>
+    <a href="/createuser/">Or register here!</a>
 </html>
+{% endblock %}

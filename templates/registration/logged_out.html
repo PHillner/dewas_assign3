@@ -1,14 +1,10 @@
-<!DOCTYPE html>
+{% extends 'template.html' %}
+{% block content %}
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Blog 42</title>
-</head>
 <body>
-    <header>
-        <h1><a href="/blog/">Blog 42</a> </h1>
-    </header>
     <h2>Logout</h2>
     You have been logged out.
+    <a href="/login/">Log back in here!</a>
 </body>
 </html>
+{% endblock %}

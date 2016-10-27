@@ -27,9 +27,8 @@ urlpatterns = [
     url(r'^edit/(?P<id>\d+)/?$', edit),
     url(r'^add/?$', add),
     url(r'^delete/(?P<id>\d+)/?$', delete),
-    #url(r'^login/?$', auth.login),
-    #url(r'^logout/?$', logout),
-    url(r'^register/?$', register),
+    url(r'^createuser/?$', createuser),
     url(r'^login/$', auth_views.login, name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),
+    url(r'^session_stats_reset/$', session_stats_reset),
 ]

@@ -1,3 +1,5 @@
+{% extends 'template.html' %}
+{% block content %}
 <div id="edit_blog">
     <h2>Edit blogpost</h2>
     <form method="post" action="/edit/{{ blog.id }}">
@@ -10,3 +12,4 @@
         <input type="submit" value="Save">
     </form>
 </div>
+{% endblock %}

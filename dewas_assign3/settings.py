@@ -30,13 +30,13 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'cache_table',
-        'CACHE_MIDDLEWARE_SECONDS': 600,
-    }
-}
+#CACHES = {
+#    'default': {
+#        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+#        'LOCATION': 'cache_table',
+#        'CACHE_MIDDLEWARE_SECONDS': 600,
+#    }
+#}
 
 INSTALLED_APPS = [
     'django.contrib.auth',
@@ -51,8 +51,6 @@ INSTALLED_APPS = [
 LOGIN_REDIRECT_URL = 'home'
 
 MIDDLEWARE = [
-    'django.middleware.cache.UpdateCacheMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
