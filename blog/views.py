@@ -79,7 +79,7 @@ def add(request):
         blog = Blog()
         blog.name = request.POST["name"]
         blog.text = request.POST["text"]
-        blog.time = datetime.today()
+        blog.time = datetime.now()
         blog.save()
         update_session_stats(request, 'add')
         messages.add_message(request,messages.SUCCESS,"Blog post added")
