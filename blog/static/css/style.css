@@ -1,27 +1,3 @@
-#top {
-}
-
-body {
-}
-
-h1 {
-}
-
-h2 {
-}
-
-h3 {
-}
-
-h4 {
-}
-
-p {
-}
-
-#blogs {
-}
-
 #blog {
     border: solid;
     border-width: thin;
@@ -30,23 +6,8 @@ p {
     width: 70%;
 }
 
-header #login_out_reg {
-}
-
-#login {
-}
-
-#register {
-}
-
-#info {
-}
-
-#content {
-    align-content: center;
-}
-
-#bottom {
+small {
+    color: grey;
 }
 
 #stats {
@@ -55,4 +16,10 @@ header #login_out_reg {
     border-color: dimgrey;
     min-width: 415px;
     width: 22.5%;
+}
+
+#archive td {
+    border: solid;
+    border-width: thin;
+    border-color: dimgrey;
 }
