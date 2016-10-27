@@ -15,7 +15,7 @@ from django.core.cache import cache
 
 def update_session_stats(request, page):
     if not "session_start" in request.session:
-        request.session["session_start"] = str(datetime.now())
+        request.session["session_start"] = datetime.now().strftime('%b %m, %Y, %I:%M %p')
         request.session["visited"] = 0
         request.session["created"] = 0
         request.session["edited"] = 0
