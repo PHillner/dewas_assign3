@@ -6,27 +6,27 @@
         <table>
             <tr>
                 <td>First name:</td>
-                <td><input id="first_name">{{ fname }}</td>
+                <td><input type="text" name="first_name" value="{{ fname }}"></td>
             </tr>
             <tr>
                 <td>Last name:</td>
-                <td><input id="last_name">{{ lname }}</td>
+                <td><input type="text" name="last_name" value="{{ lname }}"></td>
             </tr>
             <tr>
                 <td>Email:</td>
-                <td><input id="email">{{ email }}</td>
+                <td><input type="text" name="email" value="{{ email }}"></td>
             </tr>
             <tr>
                 <td>Username:</td>
-                <td><input id="username">{{ uname }}</td>
+                <td><input type="text" name="username" value="{{ uname }}"></td>
             </tr>
             <tr>
                 <td>Password:</td>
-                <td><input type="password" id="password"></td>
+                <td><input type="password" name="password"></td>
             </tr>
             <tr>
                 <td>Re-type password:</td>
-                <td><input type="password" id="password_check"></td>
+                <td><input type="password" name="password_check"></td>
             </tr>
         </table>
         <input type="submit" value="Register">

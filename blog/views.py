@@ -60,17 +60,16 @@ def edit(request, id):
         blog.name = request.POST["name"]
         blog.text = request.POST["text"]
         blog.save()
-        blog.locked = 0
         update_session_stats(request, 'edit')
         if request.POST.get("next"):
             return redirect(request.POST.get("next"))
         else:
             return redirect('/blog/'+id+'/')
-    elif request.method=="GET" and not Blog.objects.get(id=id).locked:
-        Blog.objects.get(id=id).locked = 1
+    elif request.method=="GET":
         return render(request, 'edit.html', Context({'blog':Blog.objects.get(id=id)}))
     else:
-        messages.add_message(request, messages.INFO, "The blog is locked due to the fact that it is being edited by someone else. Please try again later.")
+        messages.add_message(request, messages.INFO,
+                             "The blog is locked due to the fact that it is being edited by someone else. Please try again later.")
         return redirect('/blog/'+id+'/')
 
 @login_required(login_url="/login/")
@@ -101,16 +100,18 @@ def delete(request, id):
         return render(request, 'delete.html', Context({'blog':Blog.objects.get(id=id)}))
 
 def register_context(request):
-    return Context({'fname': request.POST.get("first_name"), 'lname': request.POST.get("last_name"),
-                'email': request.POST.get("email"), 'uname': request.POST.get("username")})
+    return Context({'fname': str(request.POST['first_name']), 'lname': str(request.POST['last_name']),
+                'email': str(request.POST['email']), 'uname': str(request.POST['username'])})
 
 @csrf_protect
 def createuser(request):
     if request.method == "POST" and not request.user.is_authenticated:
-        if request.POST.get("username") is "" or request.POST.get("password") is "" or request.POST.get("password") is "":
+        if str(request.POST['username']) is None or str(request.POST['username']) is ''\
+                or str(request.POST['password']) is  None or str(request.POST['password']) is ''\
+                or str(request.POST['password_check']) is None or str(request.POST['password_check']) is '':
             messages.add_message(request, messages.ERROR, "You need to fill at least the username and password fields to register.")
             return render(request, 'createuser.html', register_context(request))
-        elif request.POST.get("password") != request.POST.get("password"):
+        elif str(request.POST['password']) != str(request.POST['password_check']):
             messages.add_message(request, messages.ERROR, "Passwords must match!")
             return render(request, 'createuser.html', register_context(request))
         else:
@@ -120,12 +121,12 @@ def createuser(request):
                                                               "Try other username.")
                 return render(request, 'createuser.html', register_context(request))
             else:
-                uname = request.POST.get("username")
-                passw = request.POST.get("password")
-                email = request.POST.get("email")
-                user = User.objects.create_user(uname,email,passw)
-                user.first_name = request.POST.get("first_name")
-                user.last_name = request.POST.get("last_name")
+                uname = str(request.POST['username'])
+                passw = str(request.POST['password'])
+                user = User.objects.create_user(uname,password=passw)
+                user.first_name = str(request.POST['first_name'])
+                user.last_name = str(request.POST['last_name'])
+                user.email = str(request.POST['email'])
                 if user is None:
                     messages.add_message(request, messages.ERROR, "Registration failed.")
                     return render(request, 'createuser.html', register_context(request))
@@ -133,7 +134,10 @@ def createuser(request):
                 return render(request, 'home.html')
 
     elif request.method == "GET" and not request.user.is_authenticated:
-        return render(request, 'createuser.html')
+        return render(request, 'createuser.html', Context({'fname': '',
+                                                           'lname': '',
+                                                           'email': '',
+                                                           'uname': ''}))
     else:
         messages.add_message(request, messages.WARNING, "You can't do that.")
         if request.POST.get("next"):
