@@ -1,4 +1,4 @@
 .idea/*
-blog/*
+blog/migrations/*
 db.sqlite3
 *.pyc
