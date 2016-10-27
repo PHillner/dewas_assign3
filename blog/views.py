@@ -40,6 +40,9 @@ def home(request):
     update_session_stats(request, 'home')
     return render(request, 'home.html', Context({'blogs':Blog.objects.order_by("time").reverse()}))
 
+def archive(request):
+    return render(request, 'archive.html', Context({'blogs':Blog.objects.order_by("time")}))
+
 def blog(request, id):
     if Blog.exists(id):
         blog = Blog.objects.get(id=id)

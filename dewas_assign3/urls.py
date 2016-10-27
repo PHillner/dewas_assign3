@@ -21,8 +21,8 @@ from blog.views import *
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', home),
-    url(r'^blog/?$', home, name='home'),
+    url(r'^$', home, name='home'),
+    url(r'^blog/?$', archive),
     url(r'^blog/(?P<id>\d+)/?$', blog),
     url(r'^edit/(?P<id>\d+)/?$', edit),
     url(r'^add/?$', add),

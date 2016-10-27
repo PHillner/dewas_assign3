@@ -1,0 +1,24 @@
+{% extends 'template.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+    <div id="archive">
+        {% if blogs %}
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Created</th>
+                </tr>
+            {% for blog in blogs %}
+                <tr>
+                    <td>{{ blog.id }}</td>
+                    <td><a href="/blog/{{ blog.id }}/">{{ blog.name }}</a></td>
+                    <td>{{ blog.time }}</td>
+                </tr>
+            {% endfor %}
+            </table>
+        {% endif %}
+    </div>
+</html>
+{% endblock %}
