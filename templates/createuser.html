@@ -1,13 +1,6 @@
 {% extends 'template.html' %}
 {% block content %}
 <div id="register">
-    <div id="info">
-        {% if messages %}
-            {% for msg in messages %}
-                <li>{{ msg }}</li>
-            {% endfor %}
-        {% endif %}
-    </div>
     <form method="post" action="/register/">
         {% csrf_token %}
         <table>

@@ -17,6 +17,13 @@
             {% endif %}
         </div>
     </header>
+    <div id="info">
+        {% if messages %}
+            {% for msg in messages %}
+                <li>{{ msg }}</li>
+            {% endfor %}
+        {% endif %}
+    </div>
     {% block content %}
     {% endblock %}
     <a href="/blog/">Archive</a>
